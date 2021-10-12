@@ -1,0 +1,22 @@
+[package]
+name = "vite_desktop_app"
+version = "0.0.0-development"
+description = "A Tauri App"
+authors = [ "imjulian" ]
+license = "Apache-2.0 License"
+repository = "https://github.com/imjulianeral/vite-react-tauri"
+default-run = "vite_desktop_app"
+edition = "2018"
+build = "src/build.rs"
+
+[build-dependencies]
+tauri-build = { version = "1.0.0-beta.4" }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = [ "derive" ] }
+tauri = { version = "1.0.0-beta.8", features = ["api-all"] }
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
