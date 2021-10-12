@@ -1,9 +1,9 @@
 name: Build Binaries
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: ['Test & Release']
+    types: [completed]
 
 jobs:
   publish-tauri:
@@ -13,18 +13,24 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: bundle/appimage/vite-react-tauri_0.0.0-development_amd64.AppImage
-            asset_name: app-linux-${{ github.event.release.tag_name }}-amd64.AppImage
+            asset_name: app-linux-${{ steps.previoustag.outputs.tag }}-amd64.AppImage
           - os: windows-latest
             artifact_name: bundle/msi/vite-react-tauri_0.0.0-development_x64.msi
-            asset_name: app-windows-${{ github.event.release.tag_name }}-amd64.msi
+            asset_name: app-windows-${{ steps.previoustag.outputs.tag }}-x64.msi
           - os: macos-latest
             artifact_name: bundle/dmg/vite-react-tauri_0.0.0-development_x64.dmg
-            asset_name: app-macos-${{ github.event.release.tag_name }}-amd64.dmg
+            asset_name: app-macos-${{ steps.previoustag.outputs.tag }}-x64.dmg
 
     runs-on: ${{ matrix.os }}
 
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Required due to the weg Git works, without it this action won't be able to find any or the correct tags
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: 'WyriHaximus/github-action-get-previous-tag@v1'
       - name: setup node
         uses: actions/setup-node@v2
         with:
@@ -47,4 +53,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: src-tauri/target/release/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
-          tag: ${{ github.ref }}
+          tag: ${{ steps.previoustag.outputs.tag }}
