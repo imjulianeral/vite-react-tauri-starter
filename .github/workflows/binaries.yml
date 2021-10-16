@@ -1,9 +1,12 @@
 name: Build Binaries
 
 on:
-  workflow_run:
-    workflows: ['Test & Release']
-    types: [completed]
+  push:
+    tags:
+      - '*'
+  # workflow_run:
+  #   workflows: ['Test & Release']
+  #   types: [completed]
 
 jobs:
   publish-tauri:
@@ -27,6 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          persist-credentials: false
           fetch-depth: 0 # Required due to the weg Git works, without it this action won't be able to find any or the correct tags
       - name: 'Get Previous tag'
         id: previoustag
