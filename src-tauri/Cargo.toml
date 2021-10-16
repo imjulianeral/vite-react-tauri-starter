@@ -1,6 +1,6 @@
 [package]
 name = "vite_desktop_app"
-version = "0.0.0-development"
+version = "0.0.0"
 description = "A Tauri App"
 authors = [ "imjulian" ]
 license = "Apache-2.0 License"

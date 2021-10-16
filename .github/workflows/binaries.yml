@@ -4,10 +4,6 @@ on:
   release:
     types: [published, created, edited]
 
-  # workflow_run:
-  #   workflows: ['Test & Release']
-  #   types: [completed]
-
 jobs:
   publish-tauri:
     strategy:
@@ -15,18 +11,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: bundle/appimage/vite-react-tauri_0.0.0-development_amd64.AppImage
-            asset_name: app-linux-amd64.AppImage
+            artifact_name: amd64.AppImage
           - os: windows-latest
-            artifact_name: bundle/msi/vite-react-tauri_0.0.0-development_x64.msi
-            asset_name: app-windows-x64.msi
+            artifact_name: x64.msi
           - os: macos-latest
-            artifact_name: bundle/dmg/vite-react-tauri_0.0.0-development_x64.dmg
-            asset_name: app-macos-x64.dmg
+            artifact_name: x64.dmg
 
     runs-on: ${{ matrix.os }}
 
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -55,6 +47,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GH_TOKEN }}
-          file: src-tauri/target/release/${{ matrix.artifact_name }}
-          asset_name: ${{ matrix.asset_name }}
+          file: src-tauri/target/release/bundle/dmg/vite-react-tauri_0.0.0_${{ matrix.artifact_name }}
+          asset_name: ${{ steps.previoustag.outputs.tag }}-${{ matrix.artifact_name }}
           tag: ${{ steps.previoustag.outputs.tag }}
