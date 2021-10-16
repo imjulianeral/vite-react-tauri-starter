@@ -44,5 +44,6 @@ jobs:
         with:
           npmScript: desktop:build
           tagName: ${{ steps.previoustag.outputs.tag }}
+          releaseName: ${{ steps.previoustag.outputs.tag }}
           releaseDraft: false
           prerelease: true
