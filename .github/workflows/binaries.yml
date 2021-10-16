@@ -9,13 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            artifact_name: amd64.AppImage
-          - os: windows-latest
-            artifact_name: x64.msi
-          - os: macos-latest
-            artifact_name: x64.dmg
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -50,7 +44,5 @@ jobs:
         with:
           npmScript: desktop:build
           tagName: ${{ steps.previoustag.outputs.tag }}
-          releaseName: App ${{ steps.previoustag.outputs.tag }}
-          releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: true
