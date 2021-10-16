@@ -1,9 +1,9 @@
 name: Build Binaries
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published, created, edited]
+
   # workflow_run:
   #   workflows: ['Test & Release']
   #   types: [completed]
